@@ -4,7 +4,9 @@ import Course from './components/Course';
 const App = () => {
   return (
     <>
-      <Course header={course.name} parts={course.parts} />
+      {course.map((course) => (
+        <Course key={course.id} header={course.name} parts={course.parts} />
+      ))}
     </>
   );
 };
