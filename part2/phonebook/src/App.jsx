@@ -1,29 +1,22 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+// import { nanoid } from 'nanoid';
 
 function App() {
-  const initialPhoneBook = [
-    {
-      name: 'Isro Hidayatulloh',
-      number: '12345678',
-    },
-    {
-      name: 'August',
-      number: '18182992',
-    },
-    {
-      name: 'Budi',
-      number: '8888575',
-    },
-    {
-      name: 'Cindy',
-      number: '99664829',
-    },
-  ];
-  const [persons, setPersons] = useState(initialPhoneBook);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterPerson, setFilterPerson] = useState([]);
+
+  // let originalPersons = [...persons];
+
+  useEffect(() => {
+    console.log('effect');
+    axios.get('http://localhost:3001/persons').then((response) => {
+      console.log('promise fulfilled');
+      setPersons(response.data);
+    });
+  }, []);
 
   const onChangeName = (event) => {
     console.log(event.target.value);
@@ -60,7 +53,7 @@ function App() {
     setNewName('');
     setNewNumber('');
     // event.target.target = '';
-    setPersons(initialPhoneBook);
+    setPersons([]);
   };
 
   const handleSumbit = (event) => {
@@ -91,7 +84,7 @@ function App() {
   const displayOnPerson = (
     <>
       {persons.map((person) => (
-        <li key={nanoid()}>
+        <li key={person.id}>
           {person.name} {person.number}
         </li>
       ))}
@@ -101,7 +94,7 @@ function App() {
   const displayOnFilter = (
     <>
       {filterPerson.map((person) => (
-        <li key={nanoid()}>
+        <li key={person.id}>
           {person.name} {person.number}
         </li>
       ))}
