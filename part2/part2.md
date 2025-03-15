@@ -1,3 +1,6 @@
+# Daftar Isi
+
+
 # Part 2
 
 Pada bab ini pertama kita akan melihat bagaimana me-render _data collection_ seperti daftar nama ke layar. Setelah ini, kita menginspeksi bagaimana pengguna bisa men-submit data ke aplikasi React menggunakan form HTML. Kemudian kita fokus ke bagaimana kode JavaScript pada browser bisa mendapatkan dan menangani data yang tersimpan pada _backend server_. Dan yang terkahir kita akan memperhatikan beberapa cara sederhana menambahkan CSS ke aplikasi.
@@ -609,3 +612,10 @@ const App = (props) => {
   );
 };
 ```
+
+
+## b. Forms
+
+### Menyimpan notes di dalam komponen _state_
+
+Agar halaman terupdate ketika catatan baru ditambahkan cara terbaik adalah menyimpan catatan tersebut pada state dari komponen App. 
