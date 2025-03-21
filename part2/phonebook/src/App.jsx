@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-// import { nanoid } from 'nanoid';
+import {
+  getAll as getPersons,
+  create as createPerson,
+} from './services/request.js';
 
 function App() {
   const [persons, setPersons] = useState([]);
@@ -8,23 +10,15 @@ function App() {
   const [newNumber, setNewNumber] = useState('');
   const [filterPerson, setFilterPerson] = useState([]);
 
-  // let originalPersons = [...persons];
-
   useEffect(() => {
-    console.log('effect');
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled');
-      setPersons(response.data);
-    });
+    getPersons().then((contacts) => setPersons(contacts));
   }, []);
 
   const onChangeName = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const onChangeNumber = (event) => {
-    console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
@@ -43,17 +37,17 @@ function App() {
     event.preventDefault();
     setNewName('');
     setNewNumber('');
-    // event.target.target = '';
-    const name = newName;
-    console.log(name);
   };
 
   const handleReset = (event) => {
     event.preventDefault();
     setNewName('');
     setNewNumber('');
-    // event.target.target = '';
-    setPersons([]);
+
+    getPersons().then((persons) => {
+      console.log(persons);
+      setPersons(() => persons);
+    });
   };
 
   const handleSumbit = (event) => {
@@ -63,8 +57,6 @@ function App() {
 
     const hasName = persons.find((person) => person.name === name);
     const hasNumber = persons.find((person) => person.number === number);
-
-    console.log(hasName);
 
     if (hasName) {
       alert(`${name} is already added to phonebook`);
@@ -76,8 +68,15 @@ function App() {
       return;
     }
 
-    setPersons(() => {
-      return [...persons, { name, number }];
+    const newPerson = {
+      name,
+      number,
+    };
+
+    createPerson(newPerson).then((returnedObject) => {
+      setPersons((oldPersons) => [...oldPersons, returnedObject]);
+      setNewName('');
+      setNewNumber('');
     });
   };
 
@@ -100,8 +99,6 @@ function App() {
       ))}
     </>
   );
-
-  console.log(filterPerson);
 
   return (
     <div>
