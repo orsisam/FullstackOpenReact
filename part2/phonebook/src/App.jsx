@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import {
   getAll as getPersons,
   create as createPerson,
+  remove as removePerson,
+  update as updatePerson,
 } from './services/request.js';
 
 function App() {
@@ -55,36 +57,65 @@ function App() {
     const name = newName;
     const number = newNumber;
 
-    const hasName = persons.find((person) => person.name === name);
+    const hasName = persons.filter((person) => person.name === name);
     const hasNumber = persons.find((person) => person.number === number);
+    // console.log('hasName', hasName.length);
 
-    if (hasName) {
-      alert(`${name} is already added to phonebook`);
+    if (hasName.length > 0) {
+      const newPerson = { ...hasName[0] };
+      if (
+        confirm(
+          `${newPerson.name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        updatePerson(newPerson.id, { ...newPerson, number: number }).then(
+          () => {
+            getPersons().then((persons) => {
+              setPersons(persons);
+              setNewName('');
+              setNewNumber('');
+            });
+          }
+        );
+      }
       return;
-    }
-
-    if (hasNumber) {
+    } else if (hasNumber) {
       alert(`Number ${number} is already added to phonebook`);
       return;
+    } else {
+      const newPerson = {
+        name,
+        number,
+      };
+
+      createPerson(newPerson).then((returnedObject) => {
+        setPersons((oldPersons) => [...oldPersons, returnedObject]);
+        setNewName('');
+        setNewNumber('');
+      });
     }
+  };
 
-    const newPerson = {
-      name,
-      number,
-    };
+  const handleRemove = (event, person) => {
+    event.preventDefault();
 
-    createPerson(newPerson).then((returnedObject) => {
-      setPersons((oldPersons) => [...oldPersons, returnedObject]);
-      setNewName('');
-      setNewNumber('');
-    });
+    if (confirm(`Delete ${person.name}?`)) {
+      removePerson(person.id)
+        .then()
+        .then(() => {
+          getPersons().then((persons) => setPersons(persons));
+        });
+    }
   };
 
   const displayOnPerson = (
     <>
       {persons.map((person) => (
         <li key={person.id}>
-          {person.name} {person.number}
+          {person.name} {person.number} &nbsp;
+          <button onClick={(event) => handleRemove(event, person)}>
+            delete
+          </button>
         </li>
       ))}
     </>
@@ -107,7 +138,7 @@ function App() {
         filter shown with <input type='text' onChange={onChangeFilter} />
       </div>
       <h2>add a new</h2>
-      <form action=''>
+      <form>
         <div>
           name: <input onChange={onChangeName} value={newName} />
         </div>
