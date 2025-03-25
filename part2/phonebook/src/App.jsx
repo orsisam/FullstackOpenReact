@@ -11,6 +11,8 @@ function App() {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterPerson, setFilterPerson] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     getPersons().then((contacts) => setPersons(contacts));
@@ -92,6 +94,10 @@ function App() {
         setPersons((oldPersons) => [...oldPersons, returnedObject]);
         setNewName('');
         setNewNumber('');
+        setSuccessMessage(`Added ${name}`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
       });
     }
   };
@@ -104,6 +110,15 @@ function App() {
         .then()
         .then(() => {
           getPersons().then((persons) => setPersons(persons));
+        })
+        .catch(() => {
+          setErrorMessage(
+            `Information of ${person.name} has already been removed from server.`
+          );
+
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         });
     }
   };
@@ -131,9 +146,26 @@ function App() {
     </>
   );
 
+  const ErrorNotification = ({ message }) => {
+    if (message === null) {
+      return null;
+    }
+
+    return <div className='error-notif'>{message}</div>;
+  };
+
+  const SuccessNotification = ({ message }) => {
+    if (message === null) {
+      return null;
+    }
+    return <div className='success-notif'>{message}</div>;
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <ErrorNotification message={errorMessage} />
+      <SuccessNotification message={successMessage} />
       <div>
         filter shown with <input type='text' onChange={onChangeFilter} />
       </div>

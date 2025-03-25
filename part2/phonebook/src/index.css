@@ -1,0 +1,17 @@
+.error-notif {
+  border: 2px solid red;
+  color: red;
+  background-color: lightgrey;
+  padding: 10px;
+  font-size: large;
+  margin-bottom: 20px;
+}
+
+.success-notif {
+  border: 2px solid green;
+  color: green;
+  background-color: lightgrey;
+  padding: 10px;
+  font-size: large;
+  margin-bottom: 20px;
+}
