@@ -1,0 +1,19 @@
+{
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MariaDB",
+      "name": "maria local",
+      "group": "local db",
+      "username": "root",
+      "password": "123456",
+      "database": "Parks_and_Recreation"
+    }
+  ]
+}
